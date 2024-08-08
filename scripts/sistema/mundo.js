@@ -129,7 +129,7 @@ class Mundo {
             setTimeout(() => {
                 if (countInimigo == 0) {
                     posicao = random((this.x + 60 / 2), (this.largura - 60 / 2));
-                    horda = parseInt(random(2, 3));   // número de naves na horda (3 a 5)
+                    horda = 2;   // número de naves na horda
 
                     inimigo = new Inimigo({
                         centerX: posicao,

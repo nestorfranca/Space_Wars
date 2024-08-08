@@ -1,7 +1,7 @@
 # Space Wars
 
 ## Descrição
-Este é um clássico jogo de arcade Space Wars que esta sendo desenvolvido para a disciplina de Programação orientada a objeto. O objetivo do jogo é destruir todas as naves inimigas antes que elas alcancem a parte inferior da tela ou atingir a nave do jogador. O jogador controla uma nave que pode se mover para a esquerda, direita, cima e baixo e disparar projéteis para destruir os inimigos.
+Este é uma versão atualizada de um clássico jogo de arcade chamado Space Wars, que está sendo desenvolvido para a disciplina de Programação Orientada a Objetos. O objetivo do jogo é destruir todas as naves inimigas antes que elas alcancem a parte inferior da tela ou atinjam a nave do jogador. O jogador controla uma nave que pode se mover para a esquerda, direita, cima e baixo, além de disparar projéteis para destruir os inimigos.
 
 ## Funcionalidades
 - Controle da nave do jogador com as teclas de seta.

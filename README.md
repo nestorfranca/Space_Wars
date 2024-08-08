@@ -1,7 +1,3 @@
-# The-Marco-s-Show
-Repositório para praticar os ensinamento de The Marco's Show
-
-
 # Space Wars
 
 ## Descrição

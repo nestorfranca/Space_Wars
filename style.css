@@ -1,7 +1,38 @@
 html, body {
+  background-color: #171620;
   margin: 0;
   padding: 0;
 }
+
 canvas {
+  /* background: url('img/backgroud.jpg'); */
+  width: 600px;
+  height: auto;
   display: block;
+  /* margin-top: calc(50vh - 360px); */
+  margin-left: calc(25vw);
 }
+
+@font-face {
+  font-family: Empanada;
+  src: url(fonts/Empanada.otf);
+}
+
+/* .botao { 
+   font-family: 'Empanada', cursive;
+  
+  padding: 1rem 1.25rem;
+  font-size: 2.5rem;
+  letter-spacing: .25rem;
+  box-shadow: 2px 2px 0px 1px #000000;
+  text-transform: uppercase;
+  background-color: #3900a2;
+  border: none;
+  border-radius: .75rem;
+  color: #fff; 
+}
+.botao:hover {
+  background-color: #cd4bad;
+  box-shadow: 2px 2px 0px 1px #50035b;
+}
+*/

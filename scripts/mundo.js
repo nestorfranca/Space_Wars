@@ -1,5 +1,0 @@
-class Mundo {
-    constructor() {
-        
-    }
-}

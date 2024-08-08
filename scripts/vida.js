@@ -1,5 +1,0 @@
-class Vida {
-    constructor() {
-        
-    }
-}

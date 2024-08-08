@@ -1,0 +1,121 @@
+{
+    "pontuacao": {
+        "pontuacaoAtual": 0,
+        "pontuacaoRecorde": 0
+    },
+
+    "configuracoes": {
+      "vidaMaxima": 5,
+      "vidaInicial": 5,
+      
+      "projetilAtual": 0
+    },
+
+    "projeteis": {
+        "jogador": [
+            {
+                "id": 0,
+                "nome": "projetilJogador1",
+                "velocidade": 1.5,
+                "dano": 1,
+                "intervaloDisparo": 150,
+                "intervaloRajada": 0,
+                "tiroPorRajada": 1,
+                "autoMira": false,
+                "larguraTiro": 0.5
+            },
+            {
+                "id": 1,
+                "nome": "projetilJogador2",
+                "velocidade": 1.5,
+                "dano": 2,
+                "intervaloDisparo": 100,
+                "intervaloRajada": 200,
+                "tiroPorRajada": 2,
+                "autoMira": false,
+                "larguraTiro": 2
+            }
+        ],
+
+        "inimigo": [
+            {
+                "id": 0,
+                "nome": "projetilInimigo",
+                "velocidade": 0.5,
+                "dano": 1,
+                "intervaloDisparo": 4000,
+                "intervaloRajada": 0,
+                "tiroPorRajada": 1,
+                "auto-mira": true,
+                "larguraTiro": 0.6
+
+            }
+        ]
+    }, 
+    
+    "drops": [
+        {
+            "id": 0,
+            "imagem": "imagemDrops[0]",
+            "nome": "Kit de Reparo",
+            "tipo": "consumivel",
+            "raridade": 30.0,
+            "temporario": false,
+            "acumula": true,
+            "efeitos": [
+                {
+                    "tipo": "vida",
+                    "valor": 1
+                }
+            ]
+        },
+        {
+            "id": 1,
+            "imagem": "imagemDrops[1]",
+            "nome": "Escudo de Energia",
+            "tipo": "consumivel",
+            "raridade": 20.0,
+            "temporario": true,
+            "tempo": 15,
+            "acumula": false,
+            "efeitos": [
+                {
+                    "tipo": "defesa",
+                    "valor": 2
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "imagem": "imagemDrops[2]",
+            "nome": "Recarga Rápida",
+            "tipo": "consumivel",
+            "raridade": 10.0,
+            "temporario": true,
+            "tempo": 10,
+            "acumula": false,
+            "efeitos": [
+                {
+                    "tipo": "ataque",
+                    "valor": -50
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "imagem": "imagemDrops[3]",
+            "nome": "Tiro Duplo",
+            "tipo": "consumivel",
+            "raridade": 20.0,
+            "temporario": true,
+            "tempo": 15,
+            "acumula": false,
+            "efeitos": [
+                {
+                    "tipo": "arma",
+                    "valor": 1
+                }
+            ]
+        }
+    ]
+  }

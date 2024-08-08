@@ -1,5 +1,0 @@
-class Pontos {
-    constructor() {
-        
-    }
-}

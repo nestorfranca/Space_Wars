@@ -1,6 +1,6 @@
  
 class Projetil {
-    constructor({ centerX, centerY, largura = 0.5, altura = 2, id = 0, velocidade, tiroInimigo=false }) {
+    constructor({ centerX, centerY, largura = 0.5, altura = 2, id = 0, dano = 1, velocidade, tiroInimigo=false }) {
         // atributos de posição:
         this.centerX = centerX;
         this.centerY = centerY;
@@ -9,6 +9,7 @@ class Projetil {
         this.projeteis = fita.projeteis;
         this.tiroInimigo = tiroInimigo;
         this.velocidade = velocidade * escala;
+
         
         // ==================================================
         // atributos de colisão:
@@ -25,6 +26,14 @@ class Projetil {
         // atributos de projetil:
         this.projeteis = fita.projeteis;
         this.id = id;
+        this.dano = dano;
+        
+        if (this.tiroInimigo == true) {
+            this.imagem = imagemProjetil.inimigo[this.id];
+        } else {
+            this.imagem = imagemProjetil.jogador[this.id];
+        }
+        
 
         // ==================================================
         // atributos dinâmicos
@@ -53,14 +62,14 @@ class Projetil {
         push();
         imageMode(CENTER);
         if (this.tiroInimigo) {
-            image(imagemProjetilInimigo, this.centerX, this.centerY, this.largura*1.5, this.altura);
+            image(this.imagem, this.centerX, this.centerY, this.largura*1.5, this.altura);
         } else {
             //Diz qual projetil será usado 
-            if(jogador.projetil == 0){
-                image(imagemProjetil[jogador.projetil], this.centerX, this.centerY, this.largura, this.altura);  
+            if(this.id == 0) {
+                image(this.imagem, this.centerX, this.centerY, this.largura, this.altura);  
             }else{
-                let imagem = imagemProjetil[jogador.projetil]; 
-                image(imagemProjetil[jogador.projetil], this.centerX, this.centerY, (imagem.width/1500) * escala, (imagem.height/1500) * escala);     
+                let imagem = this.imagem; 
+                image(imagem, this.centerX, this.centerY, (imagem.width/1500) * escala, (imagem.height/1500) * escala);     
             }
         }
         pop();

@@ -1,12 +1,12 @@
 class Drop {
-    constructor({ centerX, centerY, largura = 2, altura = 2}) {
+    constructor({ centerX, centerY, largura = 2, altura = 2 }) {
         // atributos de posição:
         this.centerX = centerX;
         this.centerY = centerY;
         this.largura = largura * escala;
         this.altura = altura * escala;
         this.velocidade = .5 * escala;
-        
+
         // ==================================================
         // atributos de colisão:
         this.colisao = new Colisao({
@@ -16,14 +16,14 @@ class Drop {
             altura: this.altura,
             // precisao: 2.0
         });
-        
+
         // ==================================================
         // atributos de drops:
         this.drops = fita.drops;
         this.deletado = false;
-        
+
         this.id = this.sorteiaDrop(this.drops);
-        
+
         // informações do drop escolhido:
         this.imagem = this.drops[this.id].imagem
         this.nome = this.drops[this.id].nome;

@@ -1,78 +1,53 @@
  
-class Projetil {
-    constructor({ centerX, centerY, largura = 0.5, altura = 2, id = 0, dano = 1, velocidade, tiroInimigo=false }) {
-        // atributos de posição:
-        this.centerX = centerX;
-        this.centerY = centerY;
-        this.largura = largura * escala;
-        this.altura = altura * escala;
-        this.projeteis = fita.projeteis;
-        this.tiroInimigo = tiroInimigo;
+class Projetil extends Entidade {
+    constructor({ centerX, centerY, largura = 0.5, altura = 2, velocidade, id = 0, dano = 1, tiroInimigo = false }) {
+        super(centerX, centerY, largura, altura, velocidade);
+
+        // atributos gerais:
         this.velocidade = velocidade * escala;
 
-        
-        // ==================================================
-        // atributos de colisão:
-        this.colisao = new Colisao({
-            centerX: this.centerX,
-            centerY: this.centerY,
-            largura: this.largura,
-            altura: this.altura
-        });
-        
-        this.deletado = false;
-        
         // ==================================================
         // atributos de projetil:
         this.projeteis = fita.projeteis;
         this.id = id;
         this.dano = dano;
+        this.tiroInimigo = tiroInimigo;
         
+        this.imagem;
         if (this.tiroInimigo == true) {
-            this.imagem = imagemProjetil.inimigo[this.id];
+            this.imagem = imagemProjetil.inimigo[this.id].get();
+            this.largura = this.largura*1.5;
         } else {
-            this.imagem = imagemProjetil.jogador[this.id];
+            this.imagem = imagemProjetil.jogador[this.id].get();
+
+            //Diz qual projetil será usado 
+            if (this.id == 0) {
+                this.largura = largura * escala;
+                this.altura = altura * escala;
+            } else {
+                let imagem = this.imagem; 
+
+                this.largura = (imagem.width/1500) * escala;
+                this.altura = (imagem.height/1500) * escala;
+            }
         }
         
-
         // ==================================================
         // atributos dinâmicos
         this.setup();
     }
 
-    // controle de elementos dinâmicos:
-    setup() {
-        
-        this.x = this.centerX - this.largura / 2;
-        this.y = this.centerY - this.altura / 2;
-        this.colisao.setPos(this.centerX, this.centerY);
-        this.colisao.update();
-
-    }
-
     // atualiza as informações de projétil:
     update() {
+        super.update();
+
         this.move();
-        this.setup();
-        this.draw();
     }
 
     // exibe a imagem do projétil:
     draw() {
-        push();
-        imageMode(CENTER);
-        if (this.tiroInimigo) {
-            image(this.imagem, this.centerX, this.centerY, this.largura*1.5, this.altura);
-        } else {
-            //Diz qual projetil será usado 
-            if(this.id == 0) {
-                image(this.imagem, this.centerX, this.centerY, this.largura, this.altura);  
-            }else{
-                let imagem = this.imagem; 
-                image(imagem, this.centerX, this.centerY, (imagem.width/1500) * escala, (imagem.height/1500) * escala);     
-            }
-        }
-        pop();
+
+        super.draw();
     }    
 
     // atualiza o movimento do projétil:
@@ -83,9 +58,4 @@ class Projetil {
             this.centerY -= this.velocidade;
         }
     }    
-
-    // marca o projétil para ser deletado:
-    deleta() {
-        this.deletado = true;
-    }
 }

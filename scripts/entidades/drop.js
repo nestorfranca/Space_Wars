@@ -1,27 +1,13 @@
-class Drop {
-    constructor({ centerX, centerY, largura = 2, altura = 2 }) {
-        // atributos de posição:
-        this.centerX = centerX;
-        this.centerY = centerY;
-        this.largura = largura * escala;
-        this.altura = altura * escala;
-        this.velocidade = .5 * escala;
-
-        // ==================================================
-        // atributos de colisão:
-        this.colisao = new Colisao({
-            centerX: this.centerX,
-            centerY: this.centerY,
-            largura: this.largura,
-            altura: this.altura,
-            // precisao: 2.0
-        });
+class Drop extends Entidade {
+    constructor({ centerX, centerY, largura = 2, altura = 2, velocidade = 0.4 }) {
+        super(centerX, centerY, largura, altura, velocidade);
+        
+        // atributos gerais:
+        this.velocidade = velocidade * escala;
 
         // ==================================================
         // atributos de drops:
         this.drops = fita.drops;
-        this.deletado = false;
-
         this.id = this.sorteiaDrop(this.drops);
 
         // informações do drop escolhido:
@@ -60,37 +46,25 @@ class Drop {
 
     // atualiza os elementos do drop no canvas:
     update() {
+        super.update();
+
         this.move();
-        this.setup();
-        this.draw();
     }
 
-    // configuração dos elementos dinâmicos
-    setup() {
-        this.colisao.setPos(this.centerX, this.centerY);
-        this.colisao.update();
-    }
 
     // desenha o drop no canvas:
     draw() {
-        push();
-        imageMode(CENTER);
         for (let drop of this.drops) {
             if (drop.id == this.id) {
-                image(imagemDrops[this.id], this.centerX, this.centerY, this.largura, this.altura);
+                this.imagem = imagemDrops[this.id];
             }
         }
-        pop();
+
+        super.draw();
     }
 
     // movimenta o drop no eixo y:
     move() {
         this.centerY += this.velocidade;
     }
-
-    // marca o drop para ser deletado:
-    deleta() {
-        this.deletado = true;
-    }
-
 }

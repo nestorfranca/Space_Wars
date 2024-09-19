@@ -49,8 +49,8 @@ class Placar {
         }
     }
     
-    aumentoPontos() {
-        this.pontos += 10;
+    aumentoPontos(pontos) {
+        this.pontos += pontos;
 
         if (this.pontos > this.recorde) {
             this.recorde = this.pontos;

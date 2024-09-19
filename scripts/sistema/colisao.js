@@ -94,6 +94,8 @@ class Colisao {
             // console.log("direita");
             return 1;
         }
+
+        return 0;   // está em quadro
     }
 
     // verifica se o objeto saiu da tela verticalmente:
@@ -111,6 +113,8 @@ class Colisao {
             // console.log("baixo");
             return 1;
         }
+
+        return 0;   // está em quadro
     }
 
     // ==================================================

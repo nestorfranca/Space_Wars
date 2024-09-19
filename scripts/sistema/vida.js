@@ -1,5 +1,5 @@
 class Vida {
-    constructor({ largura, altura, vidaInicial, vidaMaxima, dano = 1, color, temEscudo = false, escudoPosicao = 1 }) {
+    constructor({ largura = 0.5, altura, vidaPosicao = 1, vidaInicial, vidaMaxima, color, temEscudo = false }) {
         // atributos de posição:
         this.largura = largura;
         this.altura = altura;
@@ -14,13 +14,12 @@ class Vida {
 
         // this.vidaCount = this.barraVida;
         this.vidaMaxima = this.barraVida * this.unidadeEscala;
-        this.dano = dano;
+        this.vidaPosicao = vidaPosicao; //  1 - embaixo da barra de vida;
+                                            // -1 - em cima da barra de vida
 
         // ==================================================
         // atributos do escudo:
         this.temEscudo = temEscudo;
-        this.escudoPosicao = escudoPosicao; //  1 - embaixo da barra de vida;
-                                            // -1 - em cima da barra de vida
         this.valorMaxEscudo = 2;
         this.barraEscudo = this.valorMaxEscudo * this.unidadeEscala;
 
@@ -35,7 +34,7 @@ class Vida {
 
         // posição do escudo:
         this.escudoX = this.centerX - (this.barraEscudo) / 2;
-        this.escudoY = this.centerY + this.escudoPosicao * escala;
+        this.escudoY = this.centerY + this.vidaPosicao * escala;
     }
 
     // atualiza as informações de vida:
@@ -54,14 +53,14 @@ class Vida {
     draw() {
         push();
             fill(0); //desenha o retangulo de fundo preto da vida
-            rect(this.vidaX, this.vidaY, this.vidaMaxima, .5 * escala);
+            rect(this.vidaX, this.vidaY, this.vidaMaxima, (this.vidaPosicao*this.altura) * escala);
 
             noStroke();
             fill(this.color);
 
             // Desenha a barra de vida
             for (let i = 0; i < this.barraVida; i++) {
-                rect((this.vidaX + i * this.unidadeEscala), this.vidaY, this.unidadeEscala * (0.95), 0.5 * escala);
+                rect((this.vidaX + i * this.unidadeEscala), this.vidaY, this.unidadeEscala * (0.95), (this.vidaPosicao*this.altura) * escala);
             }
         pop();
             
@@ -75,14 +74,14 @@ class Vida {
     drawEscudo() {
         push();
             fill(0);
-            rect(this.escudoX, this.escudoY, this.barraEscudo, .5 * escala);
+            rect(this.escudoX, this.escudoY, this.barraEscudo, (this.vidaPosicao*this.altura) * escala);
 
             noStroke();
             fill('lightblue');
 
             // Desenha a barra de resistencia do escudo
             for (let i = 0; i < this.valorMaxEscudo; i++) {
-                rect((this.escudoX + i * this.unidadeEscala), this.escudoY, this.unidadeEscala * (0.95), .5 * escala);
+                rect((this.escudoX + i * this.unidadeEscala), this.escudoY, this.unidadeEscala * (0.95), (this.vidaPosicao*this.altura) * escala);
             }
         pop();
     }
@@ -97,12 +96,12 @@ class Vida {
     }
 
     // diminui os pontos de vida/escudo:
-    diminui() {
+    diminui(dano) {
         // console.log(life);
         if (this.temEscudo) {
-            this.valorMaxEscudo -= this.dano;   // decrementa o escudo
+            this.valorMaxEscudo -= dano;   // decrementa o escudo
         } else {
-            this.barraVida -= this.dano;        // decrementa a vida
+            this.barraVida -= dano;        // decrementa a vida
         }
         
         if (this.valorMaxEscudo <= 0) {

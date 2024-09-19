@@ -71,11 +71,7 @@ class Vida {
         }
     }
 
-<<<<<<< HEAD
     // desenha a barra de vida do escudo:
-=======
-    // desenha a imagem de barra do escudo:
->>>>>>> b42a5824dc28e57223756ac04a66936f6ef98518
     drawEscudo() {
         push();
             fill(0);

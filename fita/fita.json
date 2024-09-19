@@ -43,11 +43,41 @@
                 "nome": "projetilInimigo",
                 "velocidade": 0.5,
                 "dano": 1,
-                "intervaloDisparo": 4000,
+                "intervaloDisparo": 10000,
                 "intervaloRajada": 0,
                 "tiroPorRajada": 1,
-                "auto-mira": true,
+                "autoMira": true,
                 "larguraTiro": 0.6
+
+            }
+        ],
+
+        "chefe": [
+            {
+                "id": 0,
+                "nome": "projetilInimigo",
+                "velocidade": 0.5,
+                "dano": 1,
+                "intervaloDisparo": 300,
+                "intervaloRajada": 0,
+                "tiroPorRajada": 1,
+                "autoMira": true,
+                "larguraTiro": 0.6
+
+            }
+        ],
+
+        "modulos": [
+            {
+                "id": 0,
+                "nome": "projetilModulos",
+                "velocidade": 1.5,
+                "dano": 1,
+                "intervaloDisparo": 250,
+                "intervaloRajada": 0,
+                "tiroPorRajada": 1,
+                "autoMira": true,
+                "larguraTiro": 0.5
 
             }
         ]
@@ -61,6 +91,7 @@
             "tipo": "consumivel",
             "raridade": 30.0,
             "temporario": false,
+            "tempo": 0,
             "acumula": true,
             "efeitos": [
                 {
@@ -113,6 +144,22 @@
             "efeitos": [
                 {
                     "tipo": "arma",
+                    "valor": 1
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "imagem": "imagemDrops[4]",
+            "nome": "Módulo de Apoio",
+            "tipo": "consumivel",
+            "raridade": 10.0,
+            "temporario": true,
+            "tempo": 10,
+            "acumula": false,
+            "efeitos": [
+                {
+                    "tipo": "equipavel",
                     "valor": 1
                 }
             ]

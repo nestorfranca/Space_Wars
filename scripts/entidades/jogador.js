@@ -1,144 +1,77 @@
-class Jogador {
+class Jogador extends Nave {
     constructor({ centerX, centerY, largura = 54, altura = 75, velocidade = 3, vidaInicial = 5, vidaMaxima = 5, projetilID = 0 }) {
-        // atributos de posição:
-        this.centerX = centerX;     // posição do centro do objeto
-        this.centerY = centerY;
-        this.largura = largura * escala;
-        this.altura = altura * escala;
-        this.velocidade = velocidade * escala;
-        
-        this.direcaoX = -1;
-        this.direcaoY = -1;
-        
-        // ==================================================
-        // atributos de colisão:
-        // precisão das dimensões da hitBox, em relação ao objeto:
-        this.precisao = 0.7;
-
-        this.colisao = new Colisao({
-            centerX: this.centerX,
-            centerY: this.centerY,
-            largura: this.largura,
-            altura: this.altura,
-            precisao: this.precisao
-        });
+        super(centerX, centerY, largura, altura, velocidade, vidaInicial, vidaMaxima, projetilID);
 
         // ==================================================
-        // atributos de vida:
-        this.vida = new Vida({
-            largura: this.largura,
-            altura: .5 + escala,
-            vidaInicial: vidaInicial,
-            vidaMaxima: vidaMaxima,
-            color: 'green',
-            temEscudo: false,
-            escudoPosicao: 1
-        });
-
-        this.duracaoDano = 0;
-        this.levouDano = false;
+        // atributoss de colisão:
         this.perdeu = false;
 
         // ==================================================
-        // armazena o id dos efeitos aplicados:
-        this.efeitosAplicados = [];
-        this.tempoEfeito = [];
-        this.tempoRecebido = [];
+        // atributos de vida: 
+        this.vidaCor = 'green';
+        this.vidaPosicao = 1;
+
+        // atributos de escudo:
+        this.temEscudo = false;
+
+        // atributo dos modulos de apoio
+        this.moduloApoio = false;
 
         // ==================================================
-        // atributos de ataque:
-        this.projetil = projetilID;
-        this.disparando = false;    // Flag para saber se está disparando       
-        this.setupAtaque();
-        
+        // armazena o id dos efeitos aplicados:
+        this.efeitos = [];
+        this.efeito = {
+            "id": undefined,
+            "tempoEfeito": undefined,
+            "tempoRecebido": undefined
+        };
+
+        this.modulos = [];
+
         // ==================================================
         // atributos dinâmicos:
         this.setup();
-    }
 
-    //  controle de elementos dinâmicos:
-    setup() {
-        this.x = this.centerX - this.largura / 2;
-        this.y = this.centerY - this.altura / 2;
-
-        this.colisao.setPos(this.centerX, this.centerY); 
-        this.colisao.update();
-        this.vida.setPos(this.centerX, (this.centerY + this.altura / 1.8));
-        this.vida.update();
     }
 
     // exibe a imagem do jogador:
     draw() {
-        let imagem = imagemJogador;
+        this.imagemPadrao = imagemJogador.get();
+        this.imagemDano = imagemJogadorDano.get();
+        this.escudoCor = color(100, 100, 255, 50);
 
-        push();
-            if (this.levouDano && frameCount % 10 < 5) {
-                imagem = imagemJogadorDano;
-            } else {
-                imagem = imagemJogador;
-            }
+        super.draw();
 
-            imageMode(CENTER);
-            image(imagem, this.centerX, this.centerY, this.largura, this.altura);
-            
-            if (this.vida.temEscudo) {
-
-                let escudoLargura = this.largura * 1.3;
-                let escudoAltura = this.altura * 1.3;
-
-                push();
-                    fill(100, 100, 255, 50);
-                    strokeWeight(0.1);
-                    stroke(200, 200, 255);
-                    ellipse(this.centerX, this.centerY, escudoLargura, escudoAltura);
-                pop();
-
-                // atualiza a precisão da colisão, para as dimensões do escudo:
-                this.colisao.updatePrecisao(1.1);
-                
-            } else {
-                // retoma as dimensões originais:
-                this.colisao.updatePrecisao(this.precisao);
-            }
-
-        pop();
-
-        // Atualiza o estado de piscar do jogador
-        if (this.levouDano) {
-            this.duracaoDano--;
-            if (this.duracaoDano <= 0) {
-                this.levouDano = false;
-                this.colisao.ativa();
-            }
+        // reativa a colisão do jogador:
+        if (!this.levouDano && !this.colisao.ativado) {
+            this.colisao.ativa();
         }
 
-    }
-
-    // atualiza os elementos e atributos do jogador:
-    update() {
-        this.moveEixoX();
-        this.moveEixoY();
-
-        this.setup();
-        
-        this.draw();
-
-        this.updateProjeteis();
     }
 
     // ==================================================
     // métodos de controle de movimento:
     moveEixoX() {
         if ((keyIsDown(65) === true || keyIsDown(37) === true)) {  // A ou "Seta p/ Esquerda"
-            this.direcaoX = 0;
-            this.centerX -= this.velocidade;
+            this.direcaoX = -1;
+            this.centerX -= this.velocidadeX;
         }
         if (keyIsDown(68) === true || keyIsDown(39) === true) {  // D ou "Seta p/ Direita"
             this.direcaoX = 1;
-            this.centerX += this.velocidade;
+            this.centerX += this.velocidadeX;
         }
 
-        if (this.direcaoX == 0 && this.isMinX(mundo)) {
+        for (let modulo of this.modulos) {
+            if (modulo.isMinX(mundo)) {
+                this.centerX = mundo.getMinX() + abs(this.centerX - modulo.getMinX());
+            }
+            
+            if (modulo.isMaxX(mundo)) {
+                this.centerX = mundo.getMaxX() - abs(this.centerX - modulo.getMaxX());
+            }
+        }
+        
+        if (this.direcaoX == -1 && this.isMinX(mundo)) {
             // console.log("esquerda");
             this.centerX = mundo.getMinX() + this.largura / 2;
         }
@@ -151,15 +84,15 @@ class Jogador {
 
     moveEixoY() {
         if (keyIsDown(87) === true || keyIsDown(38) === true) {  // W ou "Seta p/ Cima"
-            this.direcaoY = 0;
-            this.centerY -= this.velocidade;
+            this.direcaoY = -1;
+            this.centerY -= this.velocidadeY;
         }
         if (keyIsDown(83) === true || keyIsDown(40) === true) {  // S ou "Seta p/ Baixo"
             this.direcaoY = 1;
-            this.centerY += this.velocidade;
+            this.centerY += this.velocidadeY;
         }
 
-        if (this.direcaoY == 0 && this.isMinY(mundo)) {
+        if (this.direcaoY == -1 && this.isMinY(mundo)) {
             // console.log("cima");
             this.centerY = mundo.getMinY() + this.altura / 2;
         }
@@ -170,18 +103,14 @@ class Jogador {
     }
 
     // ==================================================
-    // Métodos de controle de status do jogador:
+    // Métodos de controle de status da nave:
 
     // aplica efeito de dano:
-    recebeDano() {
-        if (!this.levouDano) {
-            this.vida.diminui();
-            this.vida.update();
-        }
-
+    recebeDano(dano) {
+        this.duracao = 20;
         this.colisao.desativa();
-        this.levouDano = true;
-        this.duracaoDano = 20;
+        
+        super.recebeDano(dano)
     }
 
     // aplica efeitos recebidos pelos itens:
@@ -189,20 +118,29 @@ class Jogador {
 
         // verifica se alguma efeito que não pode acumular já foi aplicado:
         // caso verdadeiro, vai apenas reiniciar o tempo:
-        for (let efeito of this.efeitosAplicados) {
+        for (let efeito of this.efeitos) {
             // console.log(item.id);
             // console.log(efeito);
-            if (item.acumula == false && efeito == item.id) {
+            if (item.acumula == false && efeito.id == item.id) {
                 // console.log("Não acumula");
-                
-                // atualiza o tempo, na posição referente ao efeito:
-                let index = this.efeitosAplicados.indexOf(efeito);
-                this.tempoRecebido[index] = millis();
-                
+
+                // atualiza o tempo do efeito:
+                efeito.tempoRecebido = millis();
+
+                // caso efeito seja o escudo, ele reaplicará o efeito
+                if (item.efeitos[0].tipo == 'defesa') {
+                    this.vida.temEscudo = true;
+                    this.vida.valorMaxEscudo = 2;
+                }
+
+                if (item.efeitos[0].tipo == 'equipavel') {
+                    this.modulos = this.criaModulos();
+                    this.moduloApoio = true;
+                }
                 return;
             }
         }
-
+        
         // aplica o efeito:
         for (let efeito of item.efeitos) {
             let tipo = efeito.tipo
@@ -221,39 +159,46 @@ class Jogador {
                 this.projetil = 1;
                 this.setupAtaque();
 
-                for (let inim of mundo.inimigos) {
-                    inim.vida.dano = jogador.danoTiro;
+                for (let horda of mundo.inimigos.navesBatalha) {
+                    for (let inim of horda.naves    ) {
+                        inim.vida.dano = jogador.danoTiro;
+                    }
                 }
                 // modificar a arma aqui
+            }
+            if (tipo == 'equipavel') {
+                this.modulos = this.criaModulos();
+                this.moduloApoio = true;
             }
         }
 
         // salva informações sobre efeitos temporarios:
         if (item.temporario == true) {
             // adiciona o id do item na pilha:       
-            this.efeitosAplicados.push(item.id);
+            this.efeito.id = item.id;
             // adiciona o momento em que foi pego:
-            this.tempoEfeito.push(item.tempo * 1000);
-            this.tempoRecebido.push(millis());
-            console.log('logo apos receber '+this.tempoRecebido);       
+            this.efeito.tempoEfeito = item.tempo * 1000;
+            this.efeito.tempoRecebido = millis();
+            // console.log('logo apos receber '+this.tempoRecebido);       
+            this.efeitos.push({...this.efeito});
         }
+
     }
 
     // remove o efeito aplicado, depois de um tempo determinado:
     removeEfeitos() {
         let drops = fita.drops;
 
-        for (let i = this.efeitosAplicados.length - 1; i >= 0; i--) {
-            let id = this.efeitosAplicados[i];
-            // console.log('logo apos receber com i '+this.tempoRecebido[i]);
+        for (let i = this.efeitos.length - 1; i >= 0; i--) {
+            let efeito = this.efeitos[i];
 
             // verifica se o tempo do efeito acabou:
-            if (millis() - this.tempoRecebido[i] >= this.tempoEfeito[i]) {
-                let drop = drops[id]
+            if (millis() - efeito.tempoRecebido >= efeito.tempoEfeito) {
+                let drop = drops[efeito.id];
                 // reverte o efeito aplicado:
                 for (let efeito of drop.efeitos) {
                     let tipo = efeito.tipo
-    
+
                     // if (tipo == 'vida') {
                     //     this.vida.aumenta(efeito.valor);
                     // }
@@ -267,165 +212,107 @@ class Jogador {
                         this.projetil = 0;
                         this.setupAtaque();
 
-                        for (let inim of mundo.inimigos) {
-                            inim.vida.dano = jogador.danoTiro;
+                        for (let horda of mundo.inimigos.navesBatalha) {
+                            for (let inim of horda.naves) {
+                                inim.vida.dano = jogador.danoTiro;
+                            }
+                        }
+                    }
+                    if (tipo == 'equipavel') {
+                        this.moduloApoio = false;
+                        for (let modulo of this.modulos) {
+                            modulo.colisao.desativa();
+                            modulo.deleta();
                         }
                     }
                 }
-                
-                this.efeitosAplicados.splice(i, 1);
-                this.tempoEfeito.splice(i, 1);
-                this.tempoRecebido.splice(i, 1);
+
+                this.efeitos.splice(i, 1);
             }
-            
+
         }
 
         // desativa escudo, caso perca todo os pontos:
-        for (let i = this.efeitosAplicados.length - 1; i >= 0; i--) {
-            let id = this.efeitosAplicados[i];
-            
+        for (let i = this.efeitos.length - 1; i >= 0; i--) {
+            let efeito = this.efeitos[i];
+
             // remove o efeito de escudo
-            if (drops[id].nome === "Escudo de Energia" && this.vida.temEscudo == false) {
-                console.log("removido");
+            if (drops[efeito.id].nome === "Escudo de Energia" && this.vida.temEscudo == false) {
+                // console.log("removido");
                 // this.vida.temEscudo = false;
-                this.efeitosAplicados.splice(i, 1);
-                this.tempoEfeito.splice(i, 1);
-                this.tempoRecebido.splice(i, 1);
-            }                
+                this.efeitos.splice(i, 1);
+            }
         }
     }
 
+
     // mantém a contagem de tempo estável, mesmo se o jogo for pausado:
     updateTemposEfeitos(intervalo = 0) {
-        for (let i = 0; i < this.tempoRecebido.length; i++) {
-            this.tempoRecebido[i] += intervalo;
+        for (let efeito of this.efeitos) {
+            efeito.tempoRecebido += intervalo;
         }
     }
+    
     // ==================================================
     // Métodos de controle de ataque:
-    
+
     // recebe todas as informações sobre o projetil e tipo de disparo:
     setupAtaque() {
         this.projetilInfo = fita.projeteis.jogador[this.projetil]
 
-        this.projeteis = []; // Array para armazenar os projeteis
-        this.danoTiro = this.projetilInfo.dano;
-        this.intervaloDisparo = this.projetilInfo.intervaloDisparo; // Intervalo entre cada tiro na rajada (em milissegundos)
-        this.intervaloRajada = this.projetilInfo.intervaloRajada; // Intervalo entre cada rajada (em milissegundos)
-        this.tirosPorRajada = this.projetilInfo.tiroPorRajada; 
-        this.tiroVelocidade = this.projetilInfo.velocidade;
-        this.tirosRestantes = 0; 
-        this.ultimoDisparo = 0;
-        this.projetilLargura = this.projetilInfo.larguraTiro;
+        super.setupAtaque();
     }
 
-    // atualiza as informações de projetil
-    updateProjeteis() {
-        this.atira();
-
-        for (let projetil of this.projeteis) {
-            projetil.update();  // projeteis
-            // projetil.colisao.drawHitBox();
-        }
-
-        this.eliminaProjeteis();
-    }
-    
-    // retorna o estado de atirando do jogador:
-    estaAtirando() {
-        return this.disparando;
-    }
-    
     // inicia o disparo, gerando os projeteis:
     atira() {
-        if (keyIsDown(32) && !this.estaAtirando()) {
-            this.disparando = true;
-            this.tirosRestantes = this.tirosPorRajada;    // Quantidade de tiros por rajada(depois aumentar de acordo com a fase).
-            this.ultimoDisparo = millis();
+        if (keyIsDown(32)) {
+
+            super.atira();
         }
-        
+
         this.geraProjetil();
     }
-    
-    // gera os projeteis
+
+    // gera os projeteis:
     geraProjetil() {
-        let agora = millis();
-        if (this.tirosRestantes > 0 && agora - this.ultimoDisparo >= this.intervaloDisparo) {
+        this.agora = millis();
+        this.intervalo = this.intervaloDisparo;
+        this.tiroInim = false;
 
-            let projetil = new Projetil({
-                centerX: this.centerX,
-                centerY: this.centerY - this.altura / 2,
-                velocidade: this.tiroVelocidade,
-                largura: this.projetilLargura
-            });
-
-            this.projeteis.push(projetil);
-            this.tirosRestantes--;
-            this.ultimoDisparo = agora;
-            
-            // som do disparo:
+        if (this.tirosRestantes > 0 && this.agora - this.ultimoDisparo >= this.intervalo) {
+            // console.log("oi");
             somProjetil.setVolume(0.05);
             somProjetil.play();
-        
         }
 
-        if (this.tirosRestantes <= 0 && agora - this.ultimoDisparo >= this.intervaloRajada) {
-            this.disparando = false;
-        }
-
+        super.geraProjetil();
     }
 
-    // apaga projeteis marcados como 'deletado':
-    eliminaProjeteis() {
+    criaModulos() {
+        return [
+                new Modulo({
+                    centerX: this.centerX - this.largura/1.5,
+                    centerY: this.centerY,
+                    largura: 4,
+                    altura: 4,
+                    velocidade: 0.5,
+                    vidaInicial: 1,
+                    vidaMaxima: 1,
+                    projetilID: 0,
+                    posicao: -1
+                }),
 
-        for (let i = this.projeteis.length - 1; i >= 0; i--) {
-            if (this.projeteis[i].deletado) {
-                this.projeteis.splice(i, 1);
-            }
-        }
-    }
-
-    // ==================================================
-    // Métodos verificadores de posição:
-    isMinX(objeto, offset = 0) {
-        return this.getMinX() <= objeto.getMinX() + offset;
-    }
-
-    isMaxX(objeto, offset = 0) {
-        return this.getMaxX() >= objeto.getMaxX() - offset;
-    }
-
-    isMinY(objeto, offset = 0) {
-        return this.getMinY() <= objeto.getMinY() + offset;
-    }
-
-    isMaxY(objeto, offset = 0) {
-        return this.getMaxY() >= objeto.getMaxY() - offset;
-    }
-
-    // ==================================================
-    // Métodos Acessores:
-    getMinX() {
-        return this.x;
-    }
-
-    getMaxX() {
-        return this.x + this.largura;
-    }
-
-    getMinY() {
-        return this.y;
-    }
-
-    getMaxY() {
-        return this.y + this.altura;
-    }
-
-    getCenterX() {
-        return this.centerX;
-    }
-
-    getCenterY() {
-        return this.centerY;
+                new Modulo({            
+                    centerX: this.centerX + this.largura/1.5,
+                    centerY: this.centerY,
+                    largura: 4,
+                    altura: 4,
+                    velocidade: 0.5,
+                    vidaInicial: 1,
+                    vidaMaxima: 1,
+                    projetilID: 0,
+                    posicao: 1
+                })
+        ];
     }
 }

@@ -61,7 +61,7 @@ class Vida {
 
             // Desenha a barra de vida
             for (let i = 0; i < this.barraVida; i++) {
-                rect((this.vidaX + i * this.unidadeEscala), this.vidaY, this.unidadeEscala * (0.95), .5 * escala);
+                rect((this.vidaX + i * this.unidadeEscala), this.vidaY, this.unidadeEscala * (0.95), 0.5 * escala);
             }
         pop();
             
@@ -71,7 +71,11 @@ class Vida {
         }
     }
 
+<<<<<<< HEAD
     // desenha a barra de vida do escudo:
+=======
+    // desenha a imagem de barra do escudo:
+>>>>>>> b42a5824dc28e57223756ac04a66936f6ef98518
     drawEscudo() {
         push();
             fill(0);
@@ -100,9 +104,9 @@ class Vida {
     diminui() {
         // console.log(life);
         if (this.temEscudo) {
-            this.valorMaxEscudo -= this.dano;
+            this.valorMaxEscudo -= this.dano;   // decrementa o escudo
         } else {
-            this.barraVida -= this.dano;
+            this.barraVida -= this.dano;        // decrementa a vida
         }
         
         if (this.valorMaxEscudo <= 0) {

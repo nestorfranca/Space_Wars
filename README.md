@@ -11,8 +11,8 @@ Este é uma versão atualizada de um clássico jogo de arcade chamado Space Wars
 - Várias vidas para o jogador.
 
 ## Capturas de Tela
-<!-- ### Tela Inicial do Jogo
-<img alt="Tela Inicial" src="imgReadme/tela_inicial.png"> -->
+### Tela Inicial do Jogo
+<img alt="Tela Inicial" src="imgReadme/tela_inicial.png">
 
 ### Jogo em Progresso
 <img alt="Jogo em Progresso" src="imgReadme/game_play.png">
@@ -37,7 +37,15 @@ Este é uma versão atualizada de um clássico jogo de arcade chamado Space Wars
     Space-Wars.html
     ```
 ## Fluxo de classes
-<img alt="Tela Inicial" src="imgReadme/fluxo.jpg">
+### Update 19/09/2024
+ - Implementado coceitos de herança as classes.
+<hr>
+<img alt="Tela Inicial" width="100%" src="imgReadme/fluxo-heranca.jpg">
+
+### Update 01/08/2024
+- Implementação anterior sem herança. (Descontinuada).
+<hr>
+<img alt="Tela Inicial" width="100%" src="imgReadme/fluxo2.jpg">
 
 ## Controles
 - **Seta Esquerda**: Mover a nave para a esquerda.

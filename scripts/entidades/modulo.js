@@ -44,7 +44,7 @@ class Modulo extends Nave {
     }
 
     moveEixoX() {
-        this.centerX = jogador.centerX + (this.posicao*45);
+        this.centerX = jogador.centerX + (this.posicao*jogador.largura/1.5);
     }
 
     moveEixoY() {

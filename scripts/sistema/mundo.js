@@ -10,7 +10,7 @@ class Mundo {
         // inicializa atributos referente aos inimigos:
         this.countInimigo = 0;
         this.countInimigoGerados = 0;
-        this.countMaxInimigo = 70;
+        this.countMaxInimigo = 15;
         this.tempoCriado = 0;
         this.inimigos = {
             "navesBatalha": [],
